@@ -9,6 +9,7 @@ import (
 
 func getUserFromdb(user string, argument string, isPass bool) (model.User, error) {
 
+	db := database.DB.Db
 	dbUser := model.User{}
 
 	var whereArgument string
@@ -19,7 +20,7 @@ func getUserFromdb(user string, argument string, isPass bool) (model.User, error
 		whereArgument = "redundant_token"
 	}
 
-	res := dbInstance.Db.Where("user = ? AND "+whereArgument+" = ?", user, argument).First(&dbUser)
+	res := db.Where("user = ? AND "+whereArgument+" = ?", user, argument).First(&dbUser)
 
 	if res.Error != nil {
 		return dbUser, fmt.Errorf("Error")

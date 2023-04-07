@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/druidamix/go_demo_2/config"
-	model "github.com/druidamix/go_demo_2/models"
+	"github.com/druidamix/go_server/config"
+	model "github.com/druidamix/go_server/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

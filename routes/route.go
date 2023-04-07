@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/druidamix/go_demo_2/handlers"
+	"github.com/druidamix/go_server/handlers"
 	"github.com/gin-gonic/gin"
 )
 
