@@ -17,6 +17,7 @@ import (
 func AuthRequired(c *gin.Context) error {
 	hmacSampleSecret := `Secret`
 	tokenString := c.Query("token")
+
 	// Parse takes the token string and a function for looking up the key. The latter is especially
 	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
 	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
@@ -60,7 +61,6 @@ func Login(c *gin.Context) {
 
 	user := c.Request.Header.Get("user")
 	pass := c.Request.Header.Get("pass")
-	log.Println("---Entered login")
 
 	dbuser, err := controllers.GetUserFromDbByPass(user, pass)
 
@@ -125,4 +125,19 @@ func KpiRealtime(c *gin.Context) {
 
 	log.Println(strings.Join(q, ""))
 	c.String(200, strings.Join(q, ""))
+}
+
+func UpdateUserPassword(c *gin.Context) {
+	user := c.Request.Header.Get("user")
+	pass := c.Request.Header.Get("pass")
+	log.Println("--UpdateUser")
+
+	err := controllers.UpdateUserPassword(user, pass)
+
+	if err != nil {
+		c.Status(404)
+		return
+	}
+
+	c.String(200, "Register Updated")
 }

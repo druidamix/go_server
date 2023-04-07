@@ -11,6 +11,7 @@ func SetupRoutes(app *gin.Engine) {
 
 	//routes
 	app.POST("/login", handlers.Login)
+	app.POST("/login/update_register", handlers.UpdateUserPassword)
 
 	app.POST("/refresh_token", handlers.RefreshToken)
 	app.Use(handlers.AuthMiddelware())

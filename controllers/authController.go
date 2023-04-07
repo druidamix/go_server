@@ -37,12 +37,12 @@ func GenerateRedundantToken(user string) (string, error) {
 }
 
 // Stores the new secret key on db then returns it
-func updateJwtSecretKey(user string, bearer string) (string, error) {
+func updateJwtSecretKey(user string, redundant string) (string, error) {
 	token, _ := randToken(250)
 
 	db := database.DB.Db
 	userDb := model.User{User: user}
-	dbRes := db.Model(&userDb).Where("user=? and bearer_token=?", user, bearer).Updates(model.User{Token: token})
+	dbRes := db.Model(&userDb).Where("user=? and redundant_token=?", user, redundant).Updates(model.User{Token: token})
 
 	if dbRes.RowsAffected < 1 {
 		log.Println("-- 0 rows affected")
@@ -63,9 +63,9 @@ type Claims struct {
 }
 
 // Returns a jwt token string
-func GenerateJwtToken(user string, bearer string) (string, error) {
+func GenerateJwtToken(user string, redundant string) (string, error) {
 
-	jwtSecretkey, _ := updateJwtSecretKey(user, bearer)
+	jwtSecretkey, _ := updateJwtSecretKey(user, redundant)
 
 	// Declare the expiration time of the token
 	// here, we have kept it as 5 minutes

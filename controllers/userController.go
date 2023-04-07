@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"log"
+	"strconv"
 
 	"github.com/druidamix/go_server/database"
 	model "github.com/druidamix/go_server/models"
@@ -34,7 +36,6 @@ func getUserFromdb(user string, argument string, isPass bool) (model.User, error
 // Returns user from db pasing user and pass. Returns user and error
 func GetUserFromDbByPass(user string, pass string) (model.User, error) {
 	return getUserFromdb(user, pass, true)
-
 }
 
 // Returns user from db passing user an reduntant token. Returns user and error
@@ -42,12 +43,17 @@ func GetUserFromDbByRedundant(user string, redundant string) (model.User, error)
 	return getUserFromdb(user, redundant, false)
 }
 
-func UpdateUserPassword(user string, newPassword string) (bool, error) {
+func UpdateUserPassword(user string, newPassword string) error {
 	db := database.DB.Db
+	log.Println("user: " + user)
+	//_user := model.User{User: user}
 
-	res := db.Where("user = ?", user).Select("password", "first_login").Updates(model.User{Password: newPassword, First_login: 1})
-	if res.RowsAffected < 1 {
-		return false, fmt.Errorf("user not found")
+	rowsAffected := db.Where("user=?", user).Updates(model.User{Password: newPassword, First_login: 1}).RowsAffected
+	//res := db.Where("user = ?", user).Select("password", "first_login").Updates(model.User{Password: newPassword, First_login: 1})
+
+	log.Println("--rows affected: " + strconv.Itoa(int(rowsAffected)))
+	if rowsAffected < 1 {
+		return fmt.Errorf("user not found")
 	}
-	return true, nil
+	return nil
 }
