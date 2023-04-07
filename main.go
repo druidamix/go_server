@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/druidamix/go_demo_2/database"
-	"github.com/druidamix/go_demo_2/routes"
+	"github.com/druidamix/go_server/database"
+	"github.com/druidamix/go_server/routes"
 	"github.com/gin-gonic/gin"
 )
 

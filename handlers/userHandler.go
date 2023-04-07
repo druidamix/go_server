@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/druidamix/go_demo_2/controllers"
-	"github.com/druidamix/go_demo_2/database"
-	model "github.com/druidamix/go_demo_2/models"
+	"github.com/druidamix/go_server/controllers"
+	"github.com/druidamix/go_server/database"
+	model "github.com/druidamix/go_server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
