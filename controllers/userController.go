@@ -7,6 +7,7 @@ import (
 	model "github.com/druidamix/go_server/models"
 )
 
+// Returns user using pass or redundant token
 func getUserFromdb(user string, argument string, isPass bool) (model.User, error) {
 
 	db := database.DB.Db

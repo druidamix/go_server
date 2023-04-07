@@ -23,17 +23,16 @@ func randToken(n int) (string, error) {
 }
 
 func GenerateLoginToken(user string) (string, error) {
-	bearer_token, _ := randToken(250)
+	redundant_token, _ := randToken(2048)
 	db := database.DB.Db
 
-	dbRes := db.Model(&model.User{}).Where("user=?", user).Update("bearer_token", bearer_token)
+	dbRes := db.Model(&model.User{}).Where("user=?", user).Update("redundant_token", redundant_token)
 
-	log.Println("--rows affected: ", dbRes.RowsAffected)
 	if dbRes.RowsAffected < 1 {
 		return "", fmt.Errorf("user not found")
 	}
 
-	return bearer_token, nil
+	return redundant_token, nil
 }
 
 func updateJwtSecretKey(user string, bearer string) (string, error) {
@@ -61,13 +60,9 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-var jwtKey = []byte("my_secret_key")
-
 func GenerateJwtToken(user string, bearer string) (string, error) {
-	log.Println("--entro GenerateJwtToken")
 
 	jwtSecretkey, _ := updateJwtSecretKey(user, bearer)
-	log.Println("--SecretKey stored to DB: " + jwtSecretkey)
 
 	// Declare the expiration time of the token
 	// here, we have kept it as 5 minutes

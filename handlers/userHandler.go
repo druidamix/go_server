@@ -65,20 +65,21 @@ func Login(c *gin.Context) {
 	dbuser, err := controllers.GetUserFromDbByPass(user, pass)
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": "User not found"})
-	}
-
-	if dbuser.First_login == 0 {
-		c.JSON(400, gin.H{"data": "Register upgrade"})
-		return
+		c.JSON(404, gin.H{"error": "User not found"})
 	}
 
 	token, err := controllers.GenerateLoginToken(dbuser.User)
 
 	if err != nil {
-		c.JSON(400, gin.H{"data": "user not found"})
+		c.JSON(404, gin.H{"data": "user not found"})
 		return
 	}
+
+	if dbuser.First_login == 0 {
+		c.JSON(206, gin.H{"redundant_token": token})
+		return
+	}
+
 	c.JSON(200, gin.H{"token": token})
 }
 
