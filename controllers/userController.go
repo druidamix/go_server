@@ -53,7 +53,7 @@ func UpdateUserPassword(user string, newPassword string) error {
 
 	log.Println("--rows affected: " + strconv.Itoa(int(rowsAffected)))
 	if rowsAffected < 1 {
-		return fmt.Errorf("user not found")
+		return fmt.Errorf("Not found")
 	}
 	return nil
 }

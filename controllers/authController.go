@@ -30,7 +30,7 @@ func GenerateRedundantToken(user string) (string, error) {
 	dbRes := db.Model(&model.User{}).Where("user=?", user).Update("redundant_token", redundant_token)
 
 	if dbRes.RowsAffected < 1 {
-		return "", fmt.Errorf("user not found")
+		return "", fmt.Errorf("Not found")
 	}
 
 	return redundant_token, nil

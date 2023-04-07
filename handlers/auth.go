@@ -8,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
+// middelware in chargeo of verifying  http requests
 func AuthMiddelware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := c.Request.Header.Get("user")
