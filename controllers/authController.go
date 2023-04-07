@@ -93,3 +93,17 @@ func GenerateJwtToken(user string, redundant string) (string, error) {
 
 	return tokenString, err
 }
+
+// Obtains from db user token
+func GetJwtSecretKey(user string) (string, error) {
+	db := database.DB.Db
+
+	var _user model.User
+
+	res := db.Where("user = ?", user).Find(&_user)
+	if res.RowsAffected < 1 {
+		return "", fmt.Errorf("not found")
+	}
+
+	return _user.Token, nil
+}

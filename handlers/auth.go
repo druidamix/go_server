@@ -1,27 +1,12 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/druidamix/go_server/controllers"
-	"github.com/druidamix/go_server/database"
-	model "github.com/druidamix/go_server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
-
-func getJwtSecretKey(user string) (string, error) {
-	db := database.DB.Db
-
-	var _user model.User
-
-	res := db.Where("user = ?", user).Find(&_user)
-	if res.RowsAffected < 1 {
-		return "", fmt.Errorf("not found")
-	}
-	return _user.Token, nil
-}
 
 func AuthMiddelware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -29,7 +14,7 @@ func AuthMiddelware() gin.HandlerFunc {
 		jwtToken := c.Request.Header.Get("authorization")
 
 		// get the secrety key from the user
-		secretKey, err := getJwtSecretKey(user)
+		secretKey, err := controllers.GetJwtSecretKey(user)
 
 		if err != nil {
 			c.Status(400)
@@ -63,6 +48,5 @@ func AuthMiddelware() gin.HandlerFunc {
 		}
 
 		c.Next()
-
 	}
 }
