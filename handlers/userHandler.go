@@ -68,7 +68,7 @@ func Login(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "User not found"})
 	}
 
-	token, err := controllers.GenerateLoginToken(dbuser.User)
+	token, err := controllers.GenerateRedundantToken(dbuser.User)
 
 	if err != nil {
 		c.JSON(404, gin.H{"data": "user not found"})

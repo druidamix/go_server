@@ -22,7 +22,8 @@ func randToken(n int) (string, error) {
 	return hex.EncodeToString(bytes), nil
 }
 
-func GenerateLoginToken(user string) (string, error) {
+// Stores the reduntat token on db, then returns it
+func GenerateRedundantToken(user string) (string, error) {
 	redundant_token, _ := randToken(2048)
 	db := database.DB.Db
 
@@ -35,8 +36,9 @@ func GenerateLoginToken(user string) (string, error) {
 	return redundant_token, nil
 }
 
+// Stores the new secret key on db then returns it
 func updateJwtSecretKey(user string, bearer string) (string, error) {
-	token, _ := randToken(10)
+	token, _ := randToken(250)
 
 	db := database.DB.Db
 	userDb := model.User{User: user}
@@ -60,6 +62,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+// Returns a jwt token string
 func GenerateJwtToken(user string, bearer string) (string, error) {
 
 	jwtSecretkey, _ := updateJwtSecretKey(user, bearer)
@@ -89,5 +92,4 @@ func GenerateJwtToken(user string, bearer string) (string, error) {
 	}
 
 	return tokenString, err
-
 }
