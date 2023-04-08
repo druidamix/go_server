@@ -12,23 +12,23 @@ import (
 
 func Login(c *gin.Context) {
 
-	user := c.Request.Header.Get("user")
-	pass := c.Request.Header.Get("pass")
+	hUser := c.Request.Header.Get("user")
+	hPass := c.Request.Header.Get("pass")
 
-	dbuser, err := controllers.GetUserFromDbByPass(user, pass)
+	user, err := controllers.GetUserFromDbByPass(hUser, hPass)
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Not found"})
 	}
 
-	token, err := controllers.GenerateRedundantToken(dbuser.User)
+	token, err := controllers.GenerateRedundantToken(user.User)
 
 	if err != nil {
-		c.JSON(404, gin.H{"data": "Not founds"})
+		c.JSON(404, gin.H{"error": "Not found"})
 		return
 	}
-
-	if dbuser.First_login == 0 {
+	// if first time login correctly, we return 206 (change password)
+	if user.First_login == 0 {
 		c.JSON(206, gin.H{"redundant_token": token})
 		return
 	}
@@ -38,23 +38,22 @@ func Login(c *gin.Context) {
 
 func RefreshToken(c *gin.Context) {
 
-	redundant := c.Request.Header.Get("redundant")
-	user := c.Request.Header.Get("user")
+	hRedundant := c.Request.Header.Get("redundant")
+	hUser := c.Request.Header.Get("user")
 
-	log.Println("--Refreshtoken")
-	if len(redundant) < 1 || len(user) < 1 {
+	if len(hRedundant) < 1 || len(hUser) < 1 {
 		c.Status(400)
 		return
 	}
 
-	token, err := controllers.GenerateJwtToken(user, redundant)
+	token, err := controllers.GenerateJwtToken(hUser, hRedundant)
 
 	if err != nil {
 		log.Println("-- error generating token")
 		c.Status(400)
 		return
-
 	}
+
 	c.String(200, token)
 }
 
@@ -78,15 +77,14 @@ func KpiRealtime(c *gin.Context) {
 		`"total_power":`, strconv.Itoa(rand.Intn(100)),
 		"}"}
 
-	log.Println(strings.Join(q, ""))
 	c.String(200, strings.Join(q, ""))
 }
 
 func UpdateUserPassword(c *gin.Context) {
-	user := c.Request.Header.Get("user")
-	pass := c.Request.Header.Get("pass")
+	hUser := c.Request.Header.Get("user")
+	hPass := c.Request.Header.Get("pass")
 
-	err := controllers.UpdateUserPassword(user, pass)
+	err := controllers.UpdateUserPassword(hUser, hPass)
 
 	if err != nil {
 		c.Status(404)

@@ -11,11 +11,11 @@ import (
 // middelware in chargeo of verifying  http requests
 func AuthMiddelware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user := c.Request.Header.Get("user")
-		jwtToken := c.Request.Header.Get("authorization")
+		hUser := c.Request.Header.Get("user")
+		hJwToken := c.Request.Header.Get("authorization")
 
 		// get the secrety key from the user
-		secretKey, err := controllers.GetJwtSecretKey(user)
+		secretKey, err := controllers.GetJwtSecretKey(hUser)
 
 		if err != nil {
 			c.Status(400)
@@ -30,14 +30,13 @@ func AuthMiddelware() gin.HandlerFunc {
 		// Note that we are passing the key in this method as well. This method will return an error
 		// if the token is invalid (if it has expired according to the expiry time we set on sign in),
 		// or if the signature does not match
-		token, err := jwt.ParseWithClaims(jwtToken, claims, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(hJwToken, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(secretKey), nil
 		})
 
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
 				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Message": err})
-
 				return
 			}
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Message": err})
