@@ -34,16 +34,16 @@ func getUserFromdb(user string, argument string, isPass bool) (model.User, error
 }
 
 // Returns user from db pasing user and pass. Returns user and error
-func GetUserFromDbByPass(user string, pass string) (model.User, error) {
+func getUserFromDbByPass(user string, pass string) (model.User, error) {
 	return getUserFromdb(user, pass, true)
 }
 
 // Returns user from db passing user an reduntant token. Returns user and error
-func GetUserFromDbByRedundant(user string, redundant string) (model.User, error) {
+func getUserFromDbByRedundant(user string, redundant string) (model.User, error) {
 	return getUserFromdb(user, redundant, false)
 }
 
-func UpdateUserPassword(user string, newPassword string) error {
+func updateUserPassword(user string, newPassword string) error {
 	db := database.DB.Db
 	log.Println("user: " + user)
 	//_user := model.User{User: user}

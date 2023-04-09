@@ -23,7 +23,7 @@ func randToken(n int) (string, error) {
 }
 
 // Stores the reduntat token on db, then returns it
-func GenerateRedundantToken(user string) (string, error) {
+func generateRedundantToken(user string) (string, error) {
 	redundant_token, _ := randToken(2048)
 	db := database.DB.Db
 
@@ -63,7 +63,7 @@ type Claims struct {
 }
 
 // Returns a jwt token string
-func GenerateJwtToken(user string, redundant string) (string, error) {
+func generateJwtToken(user string, redundant string) (string, error) {
 
 	jwtSecretkey, _ := updateJwtSecretKey(user, redundant)
 
@@ -95,7 +95,7 @@ func GenerateJwtToken(user string, redundant string) (string, error) {
 }
 
 // Obtains from db user token
-func GetJwtSecretKey(user string) (string, error) {
+func getJwtSecretKey(user string) (string, error) {
 	db := database.DB.Db
 
 	var _user model.User
