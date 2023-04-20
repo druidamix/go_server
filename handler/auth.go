@@ -1,30 +1,32 @@
-package handlers
+// Package handler contain Jwt Middelware handler
+package handler
 
 import (
 	"net/http"
 
-	"github.com/druidamix/go_server/controllers"
+	"github.com/druidamix/go_server/repository"
+	"github.com/druidamix/go_server/service"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
 
-// middelware in chargeo of verifying  http requests
-func AuthMiddelware() gin.HandlerFunc {
+// AuthMiddelware is in charge of verifying  jwt signatures
+func AuthMiddelware(aRep *repository.AuthRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		hUser := c.Request.Header.Get("user")
 		hJwToken := c.Request.Header.Get("authorization")
 
 		// get the secrety key from the user
-		secretKey, err := controllers.GetJwtSecretKey(hUser)
+		secretKey, err := service.GetJwtSecret(hUser, aRep)
 
 		if err != nil {
 			c.Status(400)
 			c.Abort()
 			return
 		}
-
 		// Initialize a new instance of `Claims`
-		claims := &controllers.Claims{}
+
+		claims := &service.Claims{}
 
 		// Parse the JWT string and store the result in `claims`.
 		// Note that we are passing the key in this method as well. This method will return an error

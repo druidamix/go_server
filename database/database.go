@@ -1,3 +1,4 @@
+// Database package manages the database
 package database
 
 import (
@@ -7,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/druidamix/go_server/config"
-	model "github.com/druidamix/go_server/models"
+	"github.com/druidamix/go_server/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -43,9 +44,13 @@ func Connect() {
 	log.Println("Connected")
 	db.Logger = logger.Default.LogMode(logger.Info)
 
+	log.Println("hello")
 	log.Println("running migrations")
-	db.AutoMigrate(&model.User{})
+  err = db.AutoMigrate(&model.User{})
 
+  if err != nil {
+    fmt.Errorf("Error migrating")
+  }
 	DB = Dbinstance{
 		Db: db,
 	}

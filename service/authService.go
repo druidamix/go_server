@@ -1,11 +1,12 @@
-package services
+package service
 
 import (
 	"fmt"
 	"log"
 	"time"
 
-	"github.com/druidamix/go_server/repositories"
+	"github.com/druidamix/go_server/helper"
+	"github.com/druidamix/go_server/repository"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -21,9 +22,10 @@ type Claims struct {
 }
 
 // Returns a jwt token string
-func GenerateJwtToken(user string, redundant string, rep *repositories.AuthRepository) (string, error) {
+func GenerateJwtToken(user string, redundant string, rep *repository.AuthRepository) (string, error) {
 
-	jwtSecretkey, _ := rep.UpdateJwtSecret(user, redundant)
+	secretToken, _ := helper.RandToken(250)
+	jwtSecretkey, _ := rep.UpdateJwtSecret(user, redundant, secretToken)
 
 	// Declare the expiration time of the token
 	// here, we have kept it as 5 minutes
@@ -52,17 +54,23 @@ func GenerateJwtToken(user string, redundant string, rep *repositories.AuthRepos
 	return tokenString, err
 }
 
-func SaveRedundantToken(user string, rep *repositories.AuthRepository) (string, error) {
-	token, err := rep.SaveRedundantToken(user)
+// SaveRedundantToken stores redudant token
+func SaveRedundantToken(user string, rep *repository.AuthRepository) (string, error) {
+	token, err := helper.RandToken(2048)
+	if err != nil {
+		return "", fmt.Errorf("Error rand")
+	}
+
+	err = rep.SaveRedundantToken(user, token)
 	if err != nil {
 		return "", fmt.Errorf("Error saving")
 	}
 	return token, nil
 }
 
-// GetJwtSecretKey returns jwt secret key
-func GetJwtSecret(user string, rep *repositories.AuthRepository) (string, error) {
-	secret, err := rep.GetJwtSecretKey(user)
+// GetJwtSecret returns jwt secret key
+func GetJwtSecret(user string, rep *repository.AuthRepository) (string, error) {
+	secret, err := rep.GetJwtSecret(user)
 
 	if err != nil {
 		return "", fmt.Errorf("Error obtaining")

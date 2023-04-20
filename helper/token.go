@@ -1,11 +1,12 @@
-package helpers
+// Package helper contains some random functions
+package helper
 
 import (
 	"crypto/rand"
 	"encoding/hex"
 )
 
-// randToken generates a random hex value.
+// RandToken generates a random hex value.
 func RandToken(n int) (string, error) {
 	bytes := make([]byte, n)
 	if _, err := rand.Read(bytes); err != nil {

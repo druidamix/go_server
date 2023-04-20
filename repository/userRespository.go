@@ -1,9 +1,10 @@
-package repositories
+// Package repository is in charege of managing database data
+package repository
 
 import (
 	"fmt"
 
-	model "github.com/druidamix/go_server/models"
+	model "github.com/druidamix/go_server/model"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +16,7 @@ func NewUserRespository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-// Getuser return an model.User
+// GetUser return an model.User
 func (u *UserRepository) GetUser(user string, password string) (model.User, error) {
 
 	dbUser := model.User{}
@@ -29,8 +30,8 @@ func (u *UserRepository) GetUser(user string, password string) (model.User, erro
 	return dbUser, nil
 }
 
-// UpdateUserPassword updates the user password
-func (u *UserRepository) UpgteUserPass(user string, newPassword string) error {
+// UpdateUserPass updates the user password
+func (u *UserRepository) UpdateUserPass(user string, newPassword string) error {
 
 	rowsAffected := u.db.Where("user=?", user).
 		Updates(model.User{Password: newPassword, First_login: 1}).RowsAffected
